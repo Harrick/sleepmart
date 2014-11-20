@@ -3638,13 +3638,13 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
                     function new_woocommerce_product_add_to_cart_text() {
                         global $product;
                         switch ( $product->product_type ) {
-                            case 'external':
+                            case 'external':  //external products
                                 return __( 'Buy product', 'woocommerce' );
                                 break;
-                            case 'grouped':
+                            case 'grouped':   //?? no such product
                                 return __( 'View products', 'woocommerce' );
                                 break;
-                            case 'simple':
+                            case 'simple':    // normal product
                                 return __( 'Add to cart', 'woocommerce' );
                                 break;
                             case 'variable':
@@ -3658,7 +3658,7 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
                     
                     add_filter( 'woocommerce_product_add_to_cart_text' , 'new_woocommerce_product_add_to_cart_text' );
                     
-                    //add currency and currency symbol 
+                    //add currency RMB and currency symbol ￥
                     function new_currency( $currencies ) {
                         $currencies['RMB'] = __( 'Currency name', 'woocommerce' );
                         return $currencies;
@@ -3667,7 +3667,7 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
 
                     function new_currency_symbol( $currency_symbol, $currency ) {
                         switch( $currency ) {
-                            case 'RMB': $currency_symbol = '￥'; 
+                            case 'RMB': $currency_symbol = '&yen'; //&yen = ￥
                             break;
                         }
                         return $currency_symbol;
@@ -3679,5 +3679,21 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
                         return 5;
                     }
                     add_filter('loop_shop_columns', 'new_loop_columns');
+                    
+                    //order by title
+                    function new_woocommerce_get_catalog_ordering_args( $args ) {
+                        $args['orderby']  = 'title';
+
+                        return $args;
+                    }
+                    add_filter( 'woocommerce_get_catalog_ordering_args', 'new_woocommerce_get_catalog_ordering_args' );
  
+                    //if payment is successful, send invoice to client's email
+                    function send_invoice_if_payment_successful($order_id) {
+                        global $woocommerce;
+                        $order = new WC_Order($order_id);
+                        $mailer = $woocommerce->mailer();
+                        $mailer->customer_invoice( $order );
+                    }
+                    add_action('woocommerce_payment_complete', 'send_invoice_if_payment_successful');
   ?>                 
