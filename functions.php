@@ -3657,4 +3657,27 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
                     }
                     
                     add_filter( 'woocommerce_product_add_to_cart_text' , 'new_woocommerce_product_add_to_cart_text' );
+                    
+                    //add currency and currency symbol 
+                    function new_currency( $currencies ) {
+                        $currencies['RMB'] = __( 'Currency name', 'woocommerce' );
+                        return $currencies;
+                    }
+                    add_filter( 'woocommerce_currencies', 'new_currency' );
+
+                    function new_currency_symbol( $currency_symbol, $currency ) {
+                        switch( $currency ) {
+                            case 'RMB': $currency_symbol = '￥'; 
+                            break;
+                        }
+                        return $currency_symbol;
+                    }
+                    add_filter('woocommerce_currency_symbol', 'new_currency_symbol', 10, 2);// argus num = 2
+                    
+                    // Change the number of products per column 
+                    function new_loop_columns() {
+                        return 5;
+                    }
+                    add_filter('loop_shop_columns', 'new_loop_columns');
+ 
   ?>                 
