@@ -2215,7 +2215,7 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
                         {
                         if (1 != $pages &&( !($i >= $paged+$range+1 || $i <= $paged-$range-1) || $pages <= $showitems ))
                         {
-                        //echo ($paged == $i)? "
+                        echo ($paged == $i)? "
                         <span class='current zn_default_color_active'>".$i."</span>":"
                         <a href='".get_pagenum_link($i)."' class='inactive zn_default_color'>".$i."</a>";
                         echo ($paged == $i)? '
@@ -3621,9 +3621,17 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
                     add_image_size( 'full-width-image', 1170 );
                     add_filter( 'loop_shop_per_page', create_function( '$cols', 'return 12;' ), 20 );
 
+                    //add excerpt length
                     function new_excerpt_length($length) {
                     return 20;
                     }
                     add_filter('excerpt_length', 'new_excerpt_length');
+                    
+                    //change read more style and add links
+                    function new_excerpt_more($excerpt) {
+                        global $post;   
+                        return '<a href="'.get_permalink($post->ID). '">Read More...</a>';
+                    }
+                    add_filter('wp_trim_excerpt', 'new_excerpt_more');
 
-                    ?>
+  ?>                 
