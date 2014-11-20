@@ -3634,4 +3634,27 @@ if ( ! function_exists( 'zn_wrap_images' ) ) {
                     }
                     add_filter('wp_trim_excerpt', 'new_excerpt_more');
 
+                    //change add to cart content by product types
+                    function new_woocommerce_product_add_to_cart_text() {
+                        global $product;
+                        switch ( $product->product_type ) {
+                            case 'external':
+                                return __( 'Buy product', 'woocommerce' );
+                                break;
+                            case 'grouped':
+                                return __( 'View products', 'woocommerce' );
+                                break;
+                            case 'simple':
+                                return __( 'Add to cart', 'woocommerce' );
+                                break;
+                            case 'variable':
+                                return __( 'Select options', 'woocommerce' );
+                                break;
+                            default:
+                                return __( 'Read more', 'woocommerce' );
+                        }
+                    
+                    }
+                    
+                    add_filter( 'woocommerce_product_add_to_cart_text' , 'new_woocommerce_product_add_to_cart_text' );
   ?>                 
